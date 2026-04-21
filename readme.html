@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>车道线检测方法完整整理（157篇）</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","PingFang SC",Helvetica,Arial,sans-serif;
+  font-size:15px;line-height:1.72;color:#24292f;background:#fff;
+  max-width:1280px;margin:0 auto;padding:48px 56px 96px;
+}
+h1{font-size:2em;font-weight:700;color:#1b1f24;border-bottom:2px solid #d8dee4;padding-bottom:14px;margin-bottom:8px}
+h2{font-size:1.5em;font-weight:600;color:#1b1f24;border-bottom:1px solid #d8dee4;padding-bottom:8px;margin-top:44px;margin-bottom:16px}
+h3{font-size:1.18em;font-weight:600;color:#1b1f24;margin-top:30px;margin-bottom:12px}
+p{margin-bottom:12px}
+a{color:#0969da;text-decoration:none}a:hover{text-decoration:underline}
+strong{font-weight:600}
+hr{border:none;height:1px;background:#d8dee4;margin:36px 0}
+blockquote{
+  border-left:4px solid #d0d7de;padding:10px 18px;margin:14px 0 18px;
+  color:#57606a;background:#f6f8fa;border-radius:0 6px 6px 0;font-size:13.5px;line-height:1.65;
+}
+blockquote p{margin-bottom:4px}
+ul,ol{padding-left:2em;margin-bottom:12px}
+li{margin-bottom:4px}
+.sub{color:#57606a;font-size:14px;margin-bottom:4px}
+/* tables */
+.tw{overflow-x:auto;margin:14px 0 22px;border:1px solid #d0d7de;border-radius:6px}
+table{width:100%;border-collapse:collapse;font-size:13px;line-height:1.5}
+th{background:#f6f8fa;font-weight:600;text-align:left;padding:8px 10px;border-bottom:2px solid #d0d7de;white-space:nowrap}
+td{padding:6px 10px;border-bottom:1px solid #d0d7de;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f0f4f8}
+td:first-child,th:first-child{text-align:center;width:28px}
+.r{color:#cf222e;font-weight:700}
+em{font-style:italic;color:#57606a}
+.box{background:#f0f7ff;border:1px solid #b6d4fe;border-radius:8px;padding:14px 18px;margin:16px 0 20px;font-size:14px;line-height:1.7}
+.ft{margin-top:52px;padding-top:16px;border-top:1px solid #d8dee4;font-size:13px;color:#57606a;font-style:italic}
+@media(max-width:768px){body{padding:20px 14px 48px}table{font-size:11.5px}th,td{padding:4px 5px}}
+</style>
+</head>
+<body>
+
+<h1>车道线检测方法完整整理</h1>
+<p class="sub">基于 <a href="https://github.com/Core9724/Awesome-Lane-Detection">Awesome-Lane-Detection</a> 仓库整理，共计 <strong>157篇论文</strong><br>
+参考论文：Monocular Lane Detection Based on Deep Learning: A Survey (arXiv:2411.16316)</p>
+
+<hr>
+
+<!-- ===== 一 ===== -->
+<h2>一、2D 车道线检测方法</h2>
+
+<h3>1.1 基于分割的方法（Segmentation-based）—— 26篇</h3>
+<p><strong>特点</strong>：两阶段方法，按一定顺序完成车道识别和实例区分，使用 Mask、Grids 或关键点建模车道线</p>
+
+<div class="tw"><table>
+<tr><th>#</th><th>方法</th><th>年份</th><th>会议/期刊</th><th>车道建模</th><th>CULane F1(%)</th><th>TuSimple Acc(%)</th><th>特点</th><th>代码</th></tr>
+<tr><td>1</td><td>VPGNet</td><td>2017</td><td>ICCV</td><td>Mask</td><td>—</td><td>—</td><td>消失点引导</td><td><a href="https://github.com/SeokjuLee/VPGNet">Code</a></td></tr>
+<tr><td>2</td><td>LaneNet</td><td>2018</td><td>IV</td><td>Mask</td><td>—</td><td>96.38</td><td>实例分割+聚类</td><td><a href="https://github.com/MaybeShewill-CV/lanenet-lane-detection">Code</a></td></tr>
+<tr><td>3</td><td>LaneNet (Arxiv)</td><td>2018</td><td>arXiv</td><td>Mask</td><td>—</td><td>—</td><td>另一LaneNet变体</td><td>—</td></tr>
+<tr><td>4</td><td><strong>SCNN</strong></td><td>2018</td><td>AAAI</td><td>Mask</td><td>71.60</td><td>96.53</td><td>空间CNN，逐片信息传递</td><td><a href="https://github.com/harryhan618/SCNN_Pytorch">Code</a></td></tr>
+<tr><td>5</td><td>LMD</td><td>2018</td><td>DSP</td><td>Mask</td><td>—</td><td>—</td><td>车道标记检测</td><td>—</td></tr>
+<tr><td>6</td><td>EL-GAN</td><td>2018</td><td>ECCVW</td><td>Mask</td><td>—</td><td>—</td><td>GAN增强车道检测</td><td><a href="https://github.com/ibrahimgh25/EL-GAN-Implementation">Code</a></td></tr>
+<tr><td>7</td><td>Chougule et al.</td><td>2018</td><td>ECCVW</td><td>Keypoints</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>8</td><td><strong>SAD (ENet-SAD)</strong></td><td>2019</td><td>ICCV</td><td>Mask</td><td>70.80</td><td>96.64</td><td>自注意力蒸馏，轻量化</td><td><a href="https://github.com/cardwing/Codes-for-Lane-Detection">Code</a></td></tr>
+<tr><td>9</td><td>FastDraw</td><td>2019</td><td>ICCV</td><td>Mask</td><td>—</td><td>95.20</td><td>快速绘制车道</td><td>—</td></tr>
+<tr><td>10</td><td>IntRA-KD</td><td>2020</td><td>CVPR</td><td>Mask</td><td>72.00</td><td>—</td><td>区域间知识蒸馏</td><td>—</td></tr>
+<tr><td>11</td><td>SALMNet</td><td>2020</td><td>TITS</td><td>Mask</td><td>—</td><td>—</td><td>空间注意力车道标记</td><td>—</td></tr>
+<tr><td>12</td><td>Ripple-GAN</td><td>2020</td><td>TITS</td><td>Mask</td><td>—</td><td>—</td><td>波纹GAN数据增强</td><td>—</td></tr>
+<tr><td>13</td><td>PINet</td><td>2020</td><td>TITS</td><td>Keypoints</td><td>74.40</td><td>96.75</td><td>关键点实例分割</td><td><a href="https://github.com/koyeongmin/PINet_new">Code</a></td></tr>
+<tr><td>14</td><td>E2E-LMD</td><td>2020</td><td>CVPRW</td><td>Keypoints</td><td>—</td><td>—</td><td>端到端车道标记检测</td><td>—</td></tr>
+<tr><td>15</td><td><strong>UFLD</strong></td><td>2020</td><td>ECCV</td><td>Grids</td><td>72.30</td><td>95.87</td><td>超快速行分类，300+FPS</td><td><a href="https://github.com/cfzd/Ultra-Fast-Lane-Detection">Code</a></td></tr>
+<tr><td>16</td><td><strong>RESA</strong></td><td>2021</td><td>AAAI</td><td>Mask</td><td>75.30</td><td>96.82</td><td>循环特征聚合</td><td><a href="https://github.com/ZJULearning/resa">Code</a></td></tr>
+<tr><td>17</td><td>FOLOLane</td><td>2021</td><td>CVPR</td><td>Keypoints</td><td>78.80</td><td>96.59</td><td>局部几何优先</td><td>—</td></tr>
+<tr><td>18</td><td><strong>CondLaneNet</strong></td><td>2021</td><td>ICCV</td><td>Grids</td><td>79.48</td><td>97.01</td><td>条件车道检测，实例级</td><td><a href="https://github.com/aliyun/conditional-lane-detection">Code</a></td></tr>
+<tr><td>19</td><td><strong>LaneAF</strong></td><td>2021</td><td>RAL</td><td>Mask</td><td>77.41</td><td>95.63</td><td>亲和力场聚类</td><td><a href="https://github.com/sel118/LaneAF">Code</a></td></tr>
+<tr><td>20</td><td><strong>GANet</strong></td><td>2022</td><td>CVPR</td><td>Keypoints</td><td>79.63</td><td>97.71</td><td>全局关联网络</td><td>—</td></tr>
+<tr><td>21</td><td><strong>UFLDv2</strong></td><td>2022</td><td>TPAMI</td><td>Grids</td><td>76.00</td><td>96.16</td><td>UFLD改进，锚点行列</td><td><a href="https://github.com/cfzd/Ultra-Fast-Lane-Detection-v2">Code</a></td></tr>
+<tr><td>22</td><td><strong>RCLane</strong></td><td>2022</td><td>ECCV</td><td>Keypoints</td><td>77.35</td><td>96.90</td><td>行列关系建模</td><td><a href="https://github.com/lpplbiubiubiub/RCLane">Code</a></td></tr>
+<tr><td>23</td><td><strong>CANet</strong></td><td>2023</td><td>arXiv</td><td>Keypoints</td><td>79.86</td><td class="r">97.77</td><td>曲线引导线+自适应解码器</td><td>—</td></tr>
+<tr><td>24</td><td>PriorLane</td><td>2023</td><td>ICRA</td><td>Mask</td><td>76.27</td><td>96.58</td><td>先验引导</td><td><a href="https://github.com/vincentqqb/PriorLane">Code</a></td></tr>
+<tr><td>25</td><td><strong>CondLSTR</strong></td><td>2023</td><td>ICCV</td><td>Keypoints</td><td class="r">80.36</td><td>97.71</td><td>条件LSTM+Transformer（含时序）</td><td><a href="https://github.com/czyczyyzc/CondLSTR">Code</a></td></tr>
+<tr><td>26</td><td>LanePtrNet</td><td>2024</td><td>arXiv</td><td>Keypoints</td><td>79.82</td><td>96.10</td><td>指针网络车道检测</td><td>—</td></tr>
+</table></div>
+
+<p><strong>精度对比与SOTA分析</strong>：</p>
+<ul>
+<li>CULane 最佳 F1：CondLSTR <strong>80.36%</strong>（含时序）；单帧最佳：CANet 79.86%、LanePtrNet 79.82%、GANet 79.63%、CondLaneNet 79.48%</li>
+<li>TuSimple 最佳 Acc：CANet <strong>97.77%</strong>、GANet / CondLSTR 97.71%、CondLaneNet 97.01%</li>
+<li><strong>速度精度平衡最佳</strong>：UFLDv2 (TPAMI 2022)，支持多车道线类型</li>
+<li><strong>高精度</strong>：CondLaneNet (ICCV 2021)，使用动态卷积核，复杂场景表现好</li>
+<li><strong>速度优先</strong>：UFLD (ECCV 2020)，超快结构感知检测，300+ FPS 实时性</li>
+<li><strong>关键点方法</strong>：FOLOLane、PINet、GANet 在曲线车道上表现较好</li>
+</ul>
+
+<hr>
+
+<h3>1.2 基于目标检测的方法（Object Detection-based）—— 23篇</h3>
+<p><strong>特点</strong>：单阶段方法，直接同时执行实例区分和定位，使用线锚框或参数曲线建模车道线</p>
+
+<div class="tw"><table>
+<tr><th>#</th><th>方法</th><th>年份</th><th>会议/期刊</th><th>车道建模</th><th>CULane F1(%)</th><th>TuSimple Acc(%)</th><th>特点</th><th>代码</th></tr>
+<tr><td>1</td><td>Line-CNN</td><td>2019</td><td>TITS</td><td>Line Anchor</td><td>73.40</td><td>96.79</td><td>线条CNN</td><td>—</td></tr>
+<tr><td>2</td><td>PointLaneNet</td><td>2019</td><td>IV</td><td>Line Anchor</td><td>70.20</td><td>—</td><td>点检测车道</td><td>—</td></tr>
+<tr><td>3</td><td>CurveLane-NAS</td><td>2020</td><td>ECCV</td><td>Line Anchor</td><td>74.80</td><td>—</td><td>NAS搜索弯道检测</td><td><a href="https://github.com/SoulmateB/CurveLanes">Code</a></td></tr>
+<tr><td>4</td><td>PolyLaneNet</td><td>2020</td><td>ICPR</td><td>Polynomial</td><td>68.40</td><td>93.36</td><td>多项式回归</td><td><a href="https://github.com/lucastabelini/PolyLaneNet">Code</a></td></tr>
+<tr><td>5</td><td><strong>LaneATT</strong></td><td>2021</td><td>CVPR</td><td>Line Anchor</td><td>76.68</td><td>96.71</td><td>锚点+注意力</td><td><a href="https://github.com/lucastabelini/LaneATT">Code</a></td></tr>
+<tr><td>6</td><td>SGNet</td><td>2021</td><td>IJCAI</td><td>Line Anchor</td><td>76.34</td><td>96.18</td><td>结构引导网络</td><td>—</td></tr>
+<tr><td>7</td><td>LSTR</td><td>2021</td><td>WACV</td><td>Polynomial</td><td>64.00</td><td>96.18</td><td>Transformer+LSTM</td><td><a href="https://github.com/liuruijin17/LSTR">Code</a></td></tr>
+<tr><td>8</td><td>LaneFormer</td><td>2022</td><td>AAAI</td><td>Line Anchor</td><td>77.06</td><td>96.80</td><td>Transformer车道检测</td><td>—</td></tr>
+<tr><td>9</td><td>Eigenlanes</td><td>2022</td><td>CVPR</td><td>Line Anchor</td><td>77.20</td><td>95.62</td><td>特征分解车道空间</td><td><a href="https://github.com/dongkwonjin/Eigenlanes">Code</a></td></tr>
+<tr><td>10</td><td><strong>CLRNet</strong></td><td>2022</td><td>CVPR</td><td>Line Anchor</td><td>80.47</td><td>97.89</td><td>跨层细化，多尺度特征融合</td><td><a href="https://github.com/Turoad/clrnet">Code</a></td></tr>
+<tr><td>11</td><td><strong>B&eacute;zierLaneNet</strong></td><td>2022</td><td>CVPR</td><td>B&eacute;zier Curve</td><td>75.57</td><td>95.41</td><td>贝塞尔曲线建模</td><td><a href="https://github.com/voldemortX/pytorch-auto-drive">Code</a></td></tr>
+<tr><td>12</td><td><strong>O2SFormer</strong></td><td>2023</td><td>arXiv</td><td>Line Anchor</td><td>77.03</td><td>97.57</td><td>one-to-several Transformer</td><td>—</td></tr>
+<tr><td>13</td><td>PGA-Net</td><td>2023</td><td>TITS</td><td>Polynomial</td><td>—</td><td>—</td><td>点引导注意力</td><td><a href="https://github.com/qklee-lz/PGA-Net">Code</a></td></tr>
+<tr><td>14</td><td><strong>ADNet</strong></td><td>2023</td><td>ICCV</td><td>Line Anchor</td><td>78.94</td><td>96.60</td><td>锚点分解策略</td><td><a href="https://github.com/Sephirex-X/ADNet">Code</a></td></tr>
+<tr><td>15</td><td>CLRmatchNet</td><td>2023</td><td>arXiv</td><td>Line Anchor</td><td>80.00</td><td>—</td><td>CLRNet匹配改进</td><td><a href="https://github.com/sapirkontente/CLRmatchNet">Code</a></td></tr>
+<tr><td>16</td><td><strong>CLRerNet</strong></td><td>2024</td><td>WACV</td><td>Line Anchor</td><td>81.12</td><td>97.89</td><td>CLRNet增强版，LaneIoU</td><td><a href="https://github.com/hirotomusiker/CLRerNet">Code</a></td></tr>
+<tr><td>17</td><td><strong>CLRNetV2</strong></td><td>2025</td><td>TPAMI</td><td>Line Anchor</td><td>80.68</td><td>97.95</td><td>CLRNet改进版，跨层细化增强（DLA34骨干）</td><td>—</td></tr>
+<tr><td>18</td><td><strong>SRLane</strong></td><td>2024</td><td>AAAI</td><td>Line Anchor</td><td>78.90</td><td>96.85</td><td>Sketch and Refine策略</td><td><a href="https://github.com/passerer/SRLane">Code</a></td></tr>
+<tr><td>19</td><td><strong>HGLNet</strong></td><td>2024</td><td>AAAI</td><td>Line Anchor</td><td class="r">81.83</td><td>96.89</td><td>混合全局-局部感知网络（DLA34骨干）</td><td>—</td></tr>
+<tr><td>20</td><td><strong>GSENet</strong></td><td>2024</td><td>AAAI</td><td>Line Anchor</td><td>81.13</td><td class="r">97.99</td><td>全局语义增强（DLA34骨干）</td><td>—</td></tr>
+<tr><td>21</td><td>LDTR</td><td>2024</td><td>CVM</td><td>Anchor-chain</td><td>78.16</td><td>—</td><td>Transformer锚链表示</td><td>—</td></tr>
+<tr><td>22</td><td>Sparse Laneformer</td><td>2024</td><td>arXiv</td><td>Line Anchor</td><td>77.83</td><td>95.69</td><td>稀疏Laneformer</td><td>—</td></tr>
+<tr><td>23</td><td>WE-FPN</td><td>2025</td><td>arXiv</td><td>Line Anchor</td><td>80.10</td><td>97.70</td><td>小波增强FPN（DLA34骨干）</td><td>—</td></tr>
+</table></div>
+
+<p><strong>精度对比与SOTA分析</strong>：</p>
+<ul>
+<li>CULane 最佳 F1：HGLNet <strong>81.83%</strong>（DLA34）、GSENet <strong>81.13%</strong>（DLA34）、CLRerNet <strong>81.12%</strong>、CLRNetV2 <strong>80.68%</strong>（DLA34）、CLRNet <strong>80.47%</strong></li>
+<li>TuSimple 最佳 Acc：GSENet <strong>97.99%</strong>、CLRNetV2 <strong>97.95%</strong>、CLRNet / CLRerNet <strong>97.89%</strong>、HGLNet <strong>96.89%</strong></li>
+<li><strong>SOTA级别</strong>：HGLNet (AAAI 2024) CULane F1 81.83%（DLA34）当前2D检测最佳；GSENet (AAAI 2024) 81.13%（DLA34）；CLRerNet (WACV 2024) 81.12%；CLRNetV2 (TPAMI 2025) CLRNet正统改进</li>
+<li><strong>高性能曲线建模</strong>：B&eacute;zierLaneNet (CVPR 2022) 贝塞尔曲线建模</li>
+<li><strong>跨层优化</strong>：CLRNet (CVPR 2022) 跨层细化，多尺度特征融合</li>
+<li><strong>Transformer方法</strong>：LSTR 端到端车道形状预测；ADNet 锚框分解；LDTR 锚链表示</li>
+</ul>
+
+<div class="box">
+<strong>2D方法总结</strong>：CULane 最佳 F1：HGLNet 81.83%（DLA34）、GSENet 81.13%（DLA34）、CLRerNet 81.12%、CLRNetV2 80.68%；TuSimple 最佳 Acc：GSENet 97.99%、CLRNetV2 97.95%、CLRNet/CLRerNet 97.89%。
+</div>
+
+<hr>
+
+<!-- ===== 二 ===== -->
+<h2>二、3D 车道线检测方法（纯单目）</h2>
+
+<h3>2.1 基于BEV的方法（BEV-based）—— 15篇</h3>
+<p><strong>特点</strong>：核心是从 FV（前视图）特征到 BEV（鸟瞰图）特征的视角转换，包括 IPM、学习方法和自定义BEV几何</p>
+
+<div class="tw"><table>
+<tr><th>#</th><th>方法</th><th>年份</th><th>会议/期刊</th><th>视角转换</th><th>任务范式</th><th>车道建模</th><th>OpenLane F1(%)</th><th>特点</th><th>代码</th></tr>
+<tr><td>1</td><td><strong>3D-LaneNet</strong></td><td>2019</td><td>ICCV</td><td>IPM</td><td>ODet</td><td>Line Anchor</td><td>44.1</td><td>首个端到端3D车道检测</td><td>—</td></tr>
+<tr><td>2</td><td><strong>Gen-LaneNet</strong></td><td>2020</td><td>ECCV</td><td>IPM</td><td>ODet</td><td>Line Anchor</td><td>32.3</td><td>虚拟俯视图，分离2D/3D</td><td><a href="https://github.com/yuliangguo/Pytorch_Generalized_3D_Lane_Detection">Code</a></td></tr>
+<tr><td>3</td><td>3D-LaneNet+</td><td>2020</td><td>arXiv</td><td>IPM</td><td>Seg-↑</td><td>Keypoints</td><td>—</td><td>3D-LaneNet改进</td><td>—</td></tr>
+<tr><td>4</td><td><strong>CLGo</strong></td><td>2022</td><td>AAAI</td><td>IPM</td><td>ODet</td><td>Polynomial</td><td>44.2</td><td>跨层全局优化</td><td><a href="https://github.com/liuruijin17/CLGo">Code</a></td></tr>
+<tr><td>5</td><td>Li et al.</td><td>2022</td><td>CVPRW</td><td>IPM</td><td>ODet</td><td>Line Anchor</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>6</td><td><strong>PersFormer</strong></td><td>2022</td><td>ECCV</td><td>PersFormer</td><td>ODet</td><td>Line Anchor</td><td>50.5</td><td>Transformer+透视变换</td><td><a href="https://github.com/OpenDriveLab/PersFormer_3DLane">Code</a></td></tr>
+<tr><td>7</td><td><strong>BEV-LaneDet</strong></td><td>2023</td><td>CVPR</td><td>VPN</td><td>Seg-↑</td><td>Keypoints</td><td>58.4</td><td>虚拟坐标+关键点</td><td><a href="https://github.com/gigo-team/bev_lane_det">Code</a></td></tr>
+<tr><td>8</td><td><strong>3D-SplineNet</strong></td><td>2023</td><td>WACV</td><td>IPM</td><td>ODet</td><td>B-Spline Curve</td><td>—</td><td>B样条参数化连续曲线建模，无需后处理，74.3 FPS</td><td><a href="https://3d-splinenet.github.io/">Code</a></td></tr>
+<tr><td>9</td><td><strong>Chen et al.</strong></td><td>2023</td><td>arXiv</td><td>Decomposed Trans.</td><td>Seg-↓ (Dyn.Kernels)</td><td>Keypoints</td><td>63.8</td><td>分解交叉注意力同时学习BEV和车道表示</td><td>—</td></tr>
+<tr><td>10</td><td><strong>SPG3D</strong></td><td>2023</td><td>ICCV</td><td>PersFormer</td><td>ODet</td><td>Line Anchor</td><td>53.7</td><td>稀疏点引导，粗-精层级细化，减半显存加速2×</td><td><a href="https://github.com/YaoChengTang/Sparse-Point-Guided-3D-Lane-Detection">Code</a></td></tr>
+<tr><td>11</td><td><strong>GroupLane</strong></td><td>2023</td><td>arXiv</td><td>LSS</td><td>Seg-↓ (Group Conv)</td><td>Grids</td><td>61.0</td><td>分组预测，通道分组策略</td><td>—</td></tr>
+<tr><td>12</td><td><strong>LaneCPP</strong></td><td>2024</td><td>CVPR</td><td>LSS</td><td>ODet</td><td>B-Spline Curve</td><td>60.3</td><td>车道中心线物理先验</td><td>—</td></tr>
+<tr><td>13</td><td><strong>HeightLane</strong></td><td>2025</td><td>arXiv</td><td>Heightmap-guided</td><td>Seg-↑</td><td>Keypoints</td><td>62.7</td><td>高度图引导空间变换，4×A6000训练</td><td><a href="https://github.com/parkchaesong/HeightLane">Code</a></td></tr>
+<tr><td>14</td><td><strong>SC-Lane</strong></td><td>2025</td><td>arXiv</td><td>Slope-adaptive</td><td>Seg-↑</td><td>Keypoints</td><td>64.3</td><td>斜率自适应高度特征+时序一致性模块</td><td><a href="https://github.com/parkchaesong/SC-Lane">Code</a></td></tr>
+<tr><td>15</td><td><strong>GLane3D</strong></td><td>2025</td><td>arXiv</td><td>自定义BEV几何</td><td>Seg-↑</td><td>Keypoints</td><td class="r">66.0</td><td>Bottom-up关键点图+Dijkstra，<strong>纯单目SOTA</strong></td><td>—</td></tr>
+</table></div>
+
+<blockquote>
+<p><strong>SC-Lane</strong> 在 HeightLane 基础上提出斜率自适应和时序一致的高度估计框架。Slope-Aware Adaptive Feature (SAA) 模块：对每个多斜率锚点采样的 BEV 特征，使用轻量 CNN 从骨干图像特征预测逐像素锚点权重 α_a（softmax 归一化），动态加权融合不同斜率特征，替代等权拼接。锚点权重同时作为粗略高度置信度图，投影回 2D 图像空间与地面分割掩码计算 IoU 损失引导学习。Height Consistency Module (HCM)：利用自车运动补偿将 t-1 帧高度图变换到 t 帧道路坐标系，对重叠区域施加 L1 一致性损失（训练时两帧，推理仅需单帧无额外开销）。OpenLane F1 <strong>64.3%</strong>，弯道 70.7%、合流分道 63.0%、交叉路口 56.1% 均为场景最佳。高度估计 MAE <strong>0.176m</strong>、Acc@0.1m <strong>50.7%</strong> 全面超越基线。</p>
+</blockquote>
+
+<blockquote>
+<p>GLane3D 有 Lite(ResNet-18, F1 61.5%, <strong>62.2 FPS</strong>)、Base(ResNet-50, F1 63.9%)、Large(Swin-B, F1 <strong>66.0%</strong>) 三个变体。核心流程：检测3D关键点 → 预测有向连接 → Dijkstra提取车道线。自定义BEV几何解决近处稀疏/远处密集问题（透视投影导致均匀BEV网格投影到FV后图像间距与Z²成反比）。跨数据集（OpenLane→Apollo）F1保留率 <strong>89%</strong>（LATR 仅 55%），Bottom-up 方法天然泛化更强。GLane3D-Lite 是唯一 60+ FPS 的3D车道检测方案。</p>
+</blockquote>
+
+<p><strong>精度对比与SOTA分析</strong>：</p>
+<ul>
+<li>OpenLane 最佳 F1：GLane3D <strong>66.0%</strong>、SC-Lane <strong>64.3%</strong>、Chen et al. <strong>63.8%</strong>、HeightLane <strong>62.7%</strong>、GroupLane <strong>61.0%</strong>、LaneCPP <strong>60.3%</strong>、BEV-LaneDet <strong>58.4%</strong>、SPG3D <strong>53.7%</strong></li>
+<li><strong>开创性工作</strong>：3D-LaneNet (ICCV 2019) 首个端到端3D多车道检测（F1 44.1%）；Gen-LaneNet (ECCV 2020) 泛化且可扩展</li>
+<li><strong>纯单目SOTA</strong>：GLane3D (arXiv 2025) Bottom-up 关键点图新范式，精度和泛化性全面超越传统 Top-down 方法</li>
+<li><strong>斜率自适应</strong>：SC-Lane (arXiv 2025) 动态融合多斜率高度特征 + 时序一致性，超越 HeightLane +1.6 F1</li>
+<li><strong>效率优化</strong>：SPG3D (ICCV 2023) 稀疏点替代稠密对应，显存减半速度翻倍，F1 +3.2（vs PersFormer）</li>
+<li><strong>BEV转换创新</strong>：BEV-LaneDet 使用 VPN；GroupLane 使用 LSS；GLane3D 自定义BEV几何</li>
+</ul>
+
+<hr>
+
+<h3>2.2 BEV-Free 方法 —— 10篇</h3>
+<p><strong>特点</strong>：两个分支：(1) 基于深度估计将2D车道投影到3D空间；(2) 直接建模3D车道并投影回 FV 进行交互和对齐；无显式 FV→BEV 视角转换</p>
+
+<div class="tw"><table>
+<tr><th>#</th><th>方法</th><th>年份</th><th>会议/期刊</th><th>任务范式</th><th>车道建模</th><th>OpenLane F1(%)</th><th>特点</th><th>代码</th></tr>
+<tr><td>1</td><td>SALAD</td><td>2022</td><td>CVPR</td><td>Seg-↑</td><td>Mask</td><td>—</td><td>结构感知车道检测</td><td><a href="https://github.com/once-3dlanes/once_3dlanes_benchmark">Code</a></td></tr>
+<tr><td>2</td><td>CurveFormer</td><td>2023</td><td>ICRA</td><td>ODet</td><td>3D Line Anchor</td><td>50.5</td><td>曲线传播注意力机制</td><td>—</td></tr>
+<tr><td>3</td><td><strong>Anchor3DLane</strong></td><td>2023</td><td>CVPR</td><td>ODet</td><td>3D Line Anchor</td><td>56.4</td><td>学习回归3D锚框，几何约束强</td><td><a href="https://github.com/tusen-ai/Anchor3DLane">Code</a></td></tr>
+<tr><td>4</td><td><strong>LATR</strong></td><td>2023</td><td>ICCV</td><td>ODet</td><td>3D Line Anchor</td><td>61.9</td><td>Lane-Aware Transformer</td><td><a href="https://github.com/JMoonr/LATR">Code</a></td></tr>
+<tr><td>5</td><td><strong>DecoupleLane</strong></td><td>2024</td><td>AAAI</td><td>ODet</td><td>3D Polynomial</td><td>51.2</td><td>BEV曲线建模+路面高度回归解耦，统一2D/3D</td><td>—</td></tr>
+<tr><td>6</td><td><strong>PVALane</strong></td><td>2024</td><td>AAAI</td><td>ODet</td><td>3D Line Anchor</td><td class="r">63.4</td><td>位置感知+体素聚合</td><td>—</td></tr>
+<tr><td>7</td><td><strong>B&eacute;zierFormer</strong></td><td>2024</td><td>arXiv</td><td>ODet</td><td>3D B&eacute;zier Curve</td><td>56.43</td><td>贝塞尔曲线注意力+Chamfer IoU，统一2D/3D</td><td>—</td></tr>
+<tr><td>8</td><td><strong>Freq-3DLane</strong></td><td>2025</td><td>arXiv</td><td>ODet</td><td>—</td><td>59.7</td><td>频域3D车道检测</td><td>—</td></tr>
+<tr><td>9</td><td><strong>GTA-Net</strong></td><td>2025</td><td>arXiv</td><td>ODet</td><td>3D Line Anchor</td><td>62.4</td><td>时序Cost Volume几何增强 + 伪未来帧</td><td>—</td></tr>
+<tr><td>10</td><td><strong>Depth3DLane</strong></td><td>2025</td><td>arXiv</td><td>ODet</td><td>3D Anchor</td><td>56.6 / 64.3</td><td>双路径FV+自监督深度BEV，无需相机标定</td><td><a href="https://github.com/Han-777/Depth3DLane">Code</a></td></tr>
+</table></div>
+
+<blockquote>
+<p><strong>Depth3DLane</strong> 提出双路径框架融合自监督单目深度估计与 3D 车道线检测。FV 路径（ResNet-18）提取语义特征；BEV 路径利用自监督深度网络（Lite-Mono 架构，冻结权重）预测密集深度图，反投影生成伪点云 P_t ∈ R^{HW×8}（含3D坐标+颜色+uv），经 PointPillars + ResNet-18 编码为 BEV 特征。3D 锚点分别投影到 FV 和 BEV 空间采样特征后拼接送入预测头。提出逐片段拟合（per-segment fitting）方法从逐帧学习的焦距中拟合稳定内参，使框架可在无相机标定的场景（如众包HD地图）中应用。OpenLane-1000（720×960）F1 56.6%，OpenLane-300（320×480）F1 <strong>64.3%</strong>（vs LATR 63.8%）。仅 26.9M 参数。</p>
+</blockquote>
+
+<blockquote>
+<p>GTA-Net 通过 TGEM 模块从多帧运动中构建 Cost Volume 恢复深度（无显式BEV变换，类似LATR的query-based范式），通过 FiLM 调制将几何信息注入2D特征；TIQG 模块裁剪放大当前帧合成伪未来帧发现远处车道线，聚合过去+现在+伪未来三组查询。</p>
+</blockquote>
+
+<p><strong>精度对比与SOTA分析</strong>：</p>
+<ul>
+<li>OpenLane 最佳 F1：Depth3DLane <strong>64.3%</strong>（OpenLane-300）、PVALane <strong>63.4%</strong>、GTA-Net <strong>62.4%</strong>（时序）、LATR <strong>61.9%</strong>、Freq-3DLane <strong>59.7%</strong>、B&eacute;zierFormer <strong>56.43%</strong>、DecoupleLane <strong>51.2%</strong></li>
+<li><strong>自监督深度融合</strong>：Depth3DLane (arXiv 2025) 双路径框架，无需GT深度和相机标定，适用于众包场景</li>
+<li><strong>时序增强</strong>：GTA-Net (arXiv 2025) 引入多帧时序Cost Volume，纯单目3D时序方向首个代表</li>
+<li><strong>曲线建模</strong>：B&eacute;zierFormer (arXiv 2024) 贝塞尔曲线注意力统一2D/3D，F1 56.43%（151 FPS）；DecoupleLane (AAAI 2024) 曲线+路面解耦，CULane 2D mF1 56.32% SOTA</li>
+<li><strong>新方向</strong>：Freq-3DLane (arXiv 2025) 引入频域分析提升3D车道检测</li>
+</ul>
+
+<hr>
+
+<h3>2.3 即插即用增强模块 —— 1篇</h3>
+<p><strong>特点</strong>：跨 BEV/BEV-Free 的通用即插即用模块，可增强现有3D车道检测方法，不改变原始架构</p>
+
+<div class="tw"><table>
+<tr><th>#</th><th>方法</th><th>年份</th><th>会议/期刊</th><th>适用范围</th><th>基线提升</th><th>特点</th><th>代码</th></tr>
+<tr><td>1</td><td><strong>EP-head + PL-attention</strong></td><td>2025</td><td>arXiv</td><td>BEV + BEV-Free 均适用</td><td>+2.8~4.4 F1</td><td>端点补丁恢复 + 三重几何先验注意力</td><td>即将开源</td></tr>
+</table></div>
+
+<blockquote>
+<p>发现现有 sparse 表示的根本缺陷：训练 GT 端点被截断（GT 自评仅 90.1%）。EP-head 预测每个预设点到起点/终点的距离，推理时恢复完整车道线（GT 自评 → 98.5%）。PL-attention 包含点内交互（PPA）、车道间关系（LLA）、同 y 坐标关系（PYA）三重注意力。实测：LATR(BEV-Free) +2.8（61.9→64.7）、Anchor3DLane(BEV-Free) +3.2、PersFormer(BEV) +4.4。</p>
+</blockquote>
+
+<hr>
+
+<div class="box">
+<strong>3D纯单目方法总结</strong>：OpenLane 最佳 F1：GLane3D-Large <strong>66.0%</strong>（BEV-based，关键点图新范式）、SC-Lane <strong>64.3%</strong>（BEV-based，斜率自适应）、Depth3DLane <strong>64.3%</strong>（BEV-Free，自监督深度）、PVALane 63.4%（BEV-Free）、HeightLane 62.7%（BEV-based）、GTA-Net 62.4%（BEV-Free，时序）、GroupLane 61.0%（BEV-based）。2025年新趋势：Bottom-up 关键点图方法（GLane3D）在精度和泛化性上全面超越传统 Top-down 方法；斜率自适应（SC-Lane）和自监督深度（Depth3DLane）显著提升3D精度；即插即用模块（EP-head+PLA）可显著提升现有BEV和BEV-Free方法性能。
+</div>
+
+<hr>
+
+<!-- ===== 三 ===== -->
+<h2>三、3D 车道线检测方法（多模态 Camera+LiDAR）—— 2篇</h2>
+<p><strong>特点</strong>：融合相机图像和LiDAR点云进行3D车道线检测，利用多模态互补信息提升定位精度</p>
+
+<div class="tw"><table>
+<tr><th>#</th><th>方法</th><th>年份</th><th>会议/期刊</th><th>OpenLane F1(%)</th><th>特点</th><th>代码</th></tr>
+<tr><td>1</td><td>M²-3DLaneNet</td><td>2022</td><td>arXiv</td><td>55.5</td><td>LiDAR &amp; Camera 朴素融合</td><td>—</td></tr>
+<tr><td>2</td><td><strong>DV-3DLane</strong></td><td>2024</td><td>ICLR</td><td class="r">66.8</td><td>双向特征融合+统一查询生成+3D双视角注意力</td><td><a href="https://github.com/JMoonr/dv-3dlane">Code</a></td></tr>
+<tr><td>3</td><td>GLane3D‡</td><td>2025</td><td>arXiv</td><td>66.6</td><td>GLane3D + SECOND LiDAR融合</td><td>—</td></tr>
+</table></div>
+
+<blockquote>
+<p>DV-3DLane 有 Tiny(63.4)/Base(65.4)/Large(<strong>66.8</strong>) 三个变体，表中为 Large 版本。GLane3D‡ 为 GLane3D（§2.1）的多模态变体，来自同一篇论文。DV-3DLane 的 BFF 双向特征融合实现点→像素(Scatter) + 像素→点(Grid_Sample) 双向增强；UQG 统一查询生成通过 IAM + Lane-Centric 聚类统一 PV/BEV 查询。</p>
+</blockquote>
+
+<p><strong>SOTA分析</strong>：</p>
+<ul>
+<li>OpenLane 绝对 SOTA：DV-3DLane-Large <strong>66.8%</strong>，比纯单目最佳（GLane3D 66.0%）仅高 0.8%</li>
+<li>DV-3DLane vs LATR：F1 +4.9，严格阈值(0.5m) F1 +11.2，X 误差降低 47%</li>
+<li>纯单目方法（GLane3D 66.0%）已逼近多模态方法（DV-3DLane 66.8%），差距仅 0.8%</li>
+</ul>
+
+<hr>
+
+<!-- ===== 四 ===== -->
+<h2>四、多任务感知方法（Multi-task Perception）—— 13篇</h2>
+<p><strong>特点</strong>：同时处理车道线检测、可行驶区域分割、交通目标检测等多个感知任务</p>
+
+<div class="tw"><table>
+<tr><th>#</th><th>方法</th><th>2D/3D</th><th>年份</th><th>会议/期刊</th><th>任务组合</th><th>特点</th><th>Lane Acc(%)</th><th>Lane IoU(%)</th><th>可行驶区域(%)</th><th>检测mAP(%)</th><th>代码</th></tr>
+<tr><td>1</td><td>DLT-Net</td><td>2D</td><td>2019</td><td>TITS</td><td>车道+检测+可行驶</td><td>多任务联合学习</td><td>—</td><td>—</td><td>71.3</td><td>68.4</td><td>—</td></tr>
+<tr><td>2</td><td><strong>YOLOP</strong></td><td>2D</td><td>2022</td><td>MIR</td><td>车道+检测+可行驶</td><td>实时多任务</td><td>70.5</td><td>26.2</td><td>91.5</td><td>76.5</td><td><a href="https://arxiv.org/abs/2108.11250">Code</a></td></tr>
+<tr><td>3</td><td><strong>HybridNets</strong></td><td>2D</td><td>2022</td><td>arXiv</td><td>车道+检测+可行驶</td><td>端到端混合感知</td><td>85.4</td><td>31.6</td><td>90.5</td><td>77.3</td><td><a href="https://github.com/datvuthanh/HybridNets">Code</a></td></tr>
+<tr><td>4</td><td><strong>YOLOPv2</strong></td><td>2D</td><td>2022</td><td>arXiv</td><td>车道+检测+可行驶</td><td>更强更快全景感知</td><td class="r">87.3</td><td>27.2</td><td class="r">93.2</td><td>83.4</td><td><a href="https://github.com/CAIC-AD/YOLOPv2">Code</a></td></tr>
+<tr><td>5</td><td>TwinLiteNet</td><td>2D</td><td>2023</td><td>MAPR</td><td>车道+可行驶</td><td>超轻量0.44M，415 FPS，边缘部署</td><td>77.8</td><td>31.1</td><td>91.3</td><td>N/A</td><td><a href="https://github.com/chequanghuy/TwinLiteNet">Code</a></td></tr>
+<tr><td>6</td><td>Q-YOLOP</td><td>2D</td><td>2023</td><td>arXiv</td><td>车道+检测+可行驶</td><td>INT8量化感知训练，模型4×压缩，速度3×提升</td><td>—</td><td>40.2</td><td>85.2</td><td>56.9</td><td>—</td></tr>
+<tr><td>7</td><td><strong>A-YOLOM</strong></td><td>2D</td><td>2024</td><td>TVT</td><td>车道+检测+可行驶</td><td>自适应实时多任务</td><td>84.9</td><td>28.8</td><td>91.0</td><td>81.1</td><td><a href="https://github.com/JiayuanWang-JW/YOLOv8-multi-task">Code</a></td></tr>
+<tr><td>8</td><td><strong>TwinLiteNet+</strong></td><td>2D</td><td>2025</td><td>CEE</td><td>车道+可行驶</td><td>增强多任务分割，1.94M，109 FPS</td><td>81.9</td><td class="r">34.2</td><td>92.9</td><td>N/A</td><td><a href="https://github.com/chequanghuy/TwinLiteNetPlus">Code</a></td></tr>
+<tr><td>9</td><td><strong>PETRv2</strong></td><td>3D</td><td>2023</td><td>ICCV</td><td>3D检测+BEV分割+3D车道</td><td>多视角统一3D感知，OpenLane F1 61.2%</td><td>—</td><td>—</td><td>—</td><td>41.0(nuS)</td><td><a href="https://github.com/megvii-research/PETR">Code</a></td></tr>
+<tr><td>10</td><td><strong>RepVF</strong></td><td>3D</td><td>2024</td><td>ECCV</td><td>3D检测+3D车道</td><td>统一向量场表示（RFTR网络），OpenLane F1 61.8%</td><td>—</td><td>—</td><td>—</td><td>—</td><td><a href="https://github.com/jbji/RepVF">Code</a></td></tr>
+<tr><td>11</td><td><strong>RMT-PPAD</strong></td><td>2D</td><td>2025</td><td>arXiv</td><td>车道+检测+可行驶</td><td>统一多任务感知（8-pixel评测）</td><td>84.7</td><td>56.8</td><td>92.6</td><td class="r">84.9</td><td><a href="https://github.com/JiayuanWang-JW/RMT-PPAD">Code</a></td></tr>
+<tr><td>12</td><td><strong>AurigaNet</strong></td><td>2D</td><td>2026</td><td>arXiv</td><td>车道+检测+可行驶实例分割</td><td>CSPDarknet+判别损失+可变形卷积，端到端实例分割</td><td>98.77(Acc)</td><td class="r">60.8</td><td>85.2</td><td>47.6<sup>†</sup></td><td><a href="https://github.com/KiaRational/AurigaNet">Code</a></td></tr>
+<tr><td>13</td><td><strong>PoseDriver</strong></td><td>2D</td><td>2026</td><td>Preprint</td><td>车道+车+人+动物+自行车骨架</td><td>统一多类别骨架检测</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+</table></div>
+
+<blockquote>
+<p><strong>AurigaNet</strong> 基于 YOLOP/HybridNets 改进的端到端多任务网络。共享编码器（CSPDarknet + SPPF + FPN）+ 三个解码头：YOLOv5风格目标检测头、车道线分割头、可行驶区域实例分割头（二值分割 + 特征嵌入分支，引入可变形卷积使感受野对齐实例边界）。判别损失（discriminative loss）实现端到端实例分割无需后处理聚类。BDD100K：车道 IoU <strong>60.8%</strong>（超第二名>30%）、Acc 98.77%、可行驶区域 IoU 85.2%、实例 mAP50 87.25%、mAP@0.5:0.95 47.6%。9.09M 参数，RTX 4080 上 <strong>217 FPS</strong>，Jetson Orin NX 上 5.077 FPS。</p>
+</blockquote>
+
+<blockquote>
+<p><strong>PoseDriver</strong> 基于 OpenPifPaf 的 bottom-up 统一框架，将车道线重新定义为骨架检测问题（固定数量等间距关键点）。使用 CIF 做关键点检测 + CAF 做部件关联。选用无 BN 的骨干（ConvNeXt, Swin）避免多域偏移。一个模型同时检测多类别骨架，多任务权重可迁移到未见类别。</p>
+</blockquote>
+
+<blockquote>
+<p><strong>BDD100K 评测协议注意</strong>：<br>
+<strong>车道线标签宽度</strong>：Lane IoU 受标签宽度影响极大。本表中 #2-#8 使用原始仓库 <strong>2-pixel 宽度</strong>标签评测（IoU 26-34%），#11 RMT-PPAD 使用 <strong>8-pixel 膨胀</strong>标签评测（IoU 44-57%）。#12 AurigaNet 的 Lane IoU 60.8% 声称比 HybridNets 提升 29.2%，但需确认标签宽度是否一致。RMT-PPAD 论文在同一8-pixel评测下：YOLOP IoU=44.0、HybridNet IoU=52.0、YOLOPv2 IoU 未报告。两种评测均为有效标准，不可直接横向比较。<br>
+<strong>†目标检测 mAP 协议</strong>：#12 AurigaNet 的 47.6% 为 <strong>COCO mAP@0.5:0.95</strong>，表中其他方法（#2-#8, #11）的 mAP 为 <strong>mAP@0.5</strong>（单阈值），两者不可直接横向比较。若统一为 mAP@0.5，AurigaNet 检测性能会显著更高。<br>
+Lane Acc 和 Lane IoU 为不同指标（Acc=TP/(TP+FN)，IoU=TP/(TP+FN+FP)）。TwinLiteNet/TwinLiteNetPlus 仅含车道+可行驶区域，无目标检测（N/A）。PETRv2 为 nuScenes 3D 检测 mAP。RepVF（原 RFTR）为统一向量场表示。</p>
+</blockquote>
+
+<p><strong>SOTA分析</strong>：</p>
+<ul>
+<li><strong>SOTA多任务2D</strong>：RMT-PPAD (arXiv 2025) Lane IoU 56.8%（8-pixel评测）、mAP 84.9%；AurigaNet (arXiv 2026) Lane IoU <strong>60.8%</strong>（标准评测）、端到端实例分割；A-YOLOM (TVT 2024) 实时通用多任务；YOLOPv2 (arXiv 2022) Acc 87.3%</li>
+<li><strong>端到端实例分割</strong>：AurigaNet (arXiv 2026) 判别损失+可变形卷积实现无后处理的可行驶区域实例分割，217 FPS</li>
+<li><strong>新范式</strong>：PoseDriver (Preprint 2026) 将车道线检测重定义为骨架检测，统一多类别检测框架</li>
+<li><strong>轻量级选择</strong>：TwinLiteNet / TwinLiteNetPlus，高效轻量，适合嵌入式部署</li>
+<li><strong>3D多任务</strong>：PETRv2 (ICCV 2023) 统一3D检测+BEV分割+3D车道；RepVF (ECCV 2024) 统一向量场表示3D检测+3D车道</li>
+</ul>
+
+<hr>
+
+<!-- ===== 五 ===== -->
+<h2>五、视频车道线检测方法（Video Lane Detection）—— 11篇</h2>
+<p><strong>特点</strong>：利用时序信息提升检测稳定性和连续性</p>
+
+<div class="tw"><table>
+<tr><th>#</th><th>方法</th><th>2D/3D</th><th>年份</th><th>会议/期刊</th><th>VIL-100 F1<sup>0.5</sup></th><th>OpenLane-V F1<sup>0.5</sup></th><th>特点</th><th>代码</th></tr>
+<tr><td>1</td><td>Zou et al.</td><td>2D</td><td>2020</td><td>TVT</td><td>—</td><td>—</td><td>连续驾驶场景鲁棒检测</td><td><a href="https://github.com/qinnzou/Robust-Lane-Detection">Code</a></td></tr>
+<tr><td>2</td><td>Zhang et al. (ConvGRUs)</td><td>2D</td><td>2021</td><td>TITS</td><td>0.641</td><td>0.641</td><td>双卷积GRU时空网络</td><td>—</td></tr>
+<tr><td>3</td><td><strong>MMA-Net (VIL-100)</strong></td><td>2D</td><td>2021</td><td>ICCV</td><td>0.839</td><td>0.573</td><td>视频实例车道检测基准+数据集</td><td><a href="https://github.com/yujun0-0/MMA-Net">Code</a></td></tr>
+<tr><td>4</td><td>Tabelini et al. (LaneATT-T)</td><td>2D</td><td>2022</td><td>IJCNN</td><td>0.846</td><td>—</td><td>时空特征池化</td><td>—</td></tr>
+<tr><td>5</td><td><strong>TGC-Net</strong></td><td>2D</td><td>2022</td><td>ACM MM</td><td>0.892</td><td>—</td><td>深度时间和几何一致性约束</td><td>—</td></tr>
+<tr><td>6</td><td><strong>ST3DLane</strong></td><td>3D</td><td>2022</td><td>BMVC</td><td>—</td><td>—</td><td>时空融合单目3D车道检测</td><td>—</td></tr>
+<tr><td>7</td><td><strong>RVLD</strong></td><td>2D</td><td>2023</td><td>ICCV</td><td>0.924</td><td>0.825</td><td>递归视频车道检测</td><td><a href="https://github.com/dongkwonjin/RVLD">Code</a></td></tr>
+<tr><td>8</td><td><strong>CurveFormer++</strong></td><td>3D</td><td>2024</td><td>arXiv</td><td>—</td><td>—</td><td>时序曲线查询（OpenLane F1 52.7%）</td><td>—</td></tr>
+<tr><td>9</td><td><strong>LaneTCA</strong></td><td>2D</td><td>2024</td><td>arXiv</td><td>0.933</td><td>0.822</td><td>时序上下文聚合增强</td><td><a href="https://github.com/Alex-1337/LaneTCA">Code</a></td></tr>
+<tr><td>10</td><td><strong>OMR</strong></td><td>2D</td><td>2024</td><td>ECCV</td><td class="r">0.936</td><td class="r">0.836</td><td>遮挡感知记忆精炼</td><td><a href="https://github.com/dongkwonjin/OMR">Code</a></td></tr>
+<tr><td>11</td><td>Patil et al.</td><td>2D</td><td>2024</td><td>arXiv</td><td>—</td><td>—</td><td>空间-时间注意力+线性LSTM</td><td><a href="https://data.4tu.nl/datasets/4619cab6-ae4a-40d5-af77-582a77f3d821">Code</a></td></tr>
+</table></div>
+
+<blockquote>
+<p>视频方法主要在 VIL-100 和 OpenLane-V 数据集上评测（CULane 为单帧基准，无时序标注）；CurveFormer++ 为 3D 方法，在 OpenLane 3D 上评测（F1 52.7%）</p>
+</blockquote>
+
+<p><strong>SOTA分析</strong>：</p>
+<ul>
+<li><strong>SOTA（VIL-100）</strong>：OMR <strong>0.936</strong> &gt; LaneTCA <strong>0.933</strong> &gt; RVLD <strong>0.924</strong></li>
+<li><strong>SOTA（OpenLane-V）</strong>：OMR <strong>0.836</strong> &gt; RVLD <strong>0.825</strong> &gt; LaneTCA <strong>0.822</strong></li>
+<li><strong>3D视频检测</strong>：ST3DLane (BMVC 2022)；CurveFormer++ (arXiv 2024) OpenLane F1 52.7%</li>
+</ul>
+
+<p><strong>小结</strong>：视频方法利用时序信息显著提升检测稳定性。VIL-100（MMA-Net 提出）和 OpenLane-V 是视频车道检测的标准基准数据集。</p>
+
+<hr>
+
+<!-- ===== 六 ===== -->
+<h2>六、在线高精地图构建方法（Online HD Map Construction）—— 36篇</h2>
+<p><strong>特点</strong>：从传感器数据实时构建矢量化的 HD 地图表示</p>
+
+<div class="tw"><table>
+<tr><th>#</th><th>方法</th><th>年份</th><th>会议/期刊</th><th>车道分隔线(%)</th><th>人行横道(%)</th><th>道路边界(%)</th><th>平均mAP(%)</th><th>核心特点</th><th>代码</th></tr>
+<tr><td>1</td><td><strong>HDMapNet</strong></td><td>2022</td><td>ICRA</td><td>21.7</td><td>18.4</td><td>39.5</td><td>26.5</td><td>首个在线矢量化地图框架</td><td><a href="https://github.com/Tsinghua-MARS-Lab/HDMapNet">Code</a></td></tr>
+<tr><td>2</td><td>SuperFusion</td><td>2022</td><td>arXiv</td><td>—</td><td>—</td><td>—</td><td>—</td><td>多级LiDAR-Camera融合</td><td><a href="https://github.com/haomo-ai/SuperFusion">Code</a></td></tr>
+<tr><td>3</td><td><strong>VectorMapNet</strong></td><td>2023</td><td>ICML</td><td>47.3</td><td>36.1</td><td>39.3</td><td>40.9</td><td>端到端矢量化先驱</td><td><a href="https://github.com/Mrmoore98/VectorMapNet_code">Code</a></td></tr>
+<tr><td>4</td><td><strong>MapTR</strong></td><td>2023</td><td>ICLR</td><td>55.2</td><td>46.3</td><td>53.0</td><td>51.5</td><td>统一排列建模，实时</td><td><a href="https://arxiv.org/abs/2208.14437">Code</a></td></tr>
+<tr><td>5</td><td>InstaGraM</td><td>2023</td><td>CVPRW</td><td>47.2</td><td>33.8</td><td>44.0</td><td>41.7</td><td>实例级图建模</td><td>—</td></tr>
+<tr><td>6</td><td>MachMap</td><td>2023</td><td>CVPRW</td><td>—</td><td>—</td><td>—</td><td>—</td><td>紧凑HD地图构建</td><td>—</td></tr>
+<tr><td>7</td><td>NMP</td><td>2023</td><td>CVPR</td><td>—</td><td>—</td><td>—</td><td>—</td><td>神经地图先验</td><td><a href="https://github.com/Tsinghua-MARS-Lab/neural_map_prior">Code</a></td></tr>
+<tr><td>8</td><td><strong>BeMapNet</strong></td><td>2023</td><td>CVPR</td><td>62.3</td><td>57.7</td><td>59.4</td><td>59.8</td><td>分段贝塞尔曲线建模</td><td><a href="https://github.com/er-muyue/BeMapNet">Code</a></td></tr>
+<tr><td>9</td><td><strong>PivotNet</strong></td><td>2023</td><td>ICCV</td><td>56.5</td><td>56.2</td><td>60.1</td><td>57.6</td><td>Pivot点表示学习</td><td><a href="https://github.com/wenjie710/PivotNet">Code</a></td></tr>
+<tr><td>10</td><td><strong>MV-Map</strong></td><td>2023</td><td>ICCV</td><td>—</td><td>—</td><td>—</td><td>—</td><td>多视图一致性生成</td><td><a href="https://github.com/ZiYang-xie/MV-Map">Code</a></td></tr>
+<tr><td>11</td><td>PolyDiffuse</td><td>2023</td><td>NeurIPS</td><td>59.7</td><td>58.2</td><td>61.3</td><td>59.7</td><td>扩散模型多边形重建</td><td><a href="https://github.com/woodfrog/poly-diffuse">Code</a></td></tr>
+<tr><td>12</td><td>MapVR</td><td>2023</td><td>NeurIPS</td><td>54.4</td><td>47.7</td><td>51.4</td><td>51.2</td><td>栅格化视角矢量化</td><td><a href="https://github.com/ZhangGongjie/MapVR">Code</a></td></tr>
+<tr><td>13</td><td>MapSeg</td><td>2023</td><td>arXiv</td><td>—</td><td>—</td><td>—</td><td>—</td><td>分割引导结构化建模</td><td>—</td></tr>
+<tr><td>14</td><td>NeMO</td><td>2023</td><td>arXiv</td><td>—</td><td>—</td><td>—</td><td>—</td><td>神经地图生长系统</td><td>—</td></tr>
+<tr><td>15</td><td>InsMapper</td><td>2023</td><td>arXiv</td><td>63.9</td><td>55.4</td><td>65.8</td><td>61.7</td><td>实例内信息矢量化</td><td><a href="https://github.com/TonyXuQAQ/InsMapper">Code</a></td></tr>
+<tr><td>16</td><td>MapEX</td><td>2023</td><td>arXiv</td><td>—</td><td>—</td><td>—</td><td>—</td><td>利用已有地图信息</td><td>—</td></tr>
+<tr><td>17</td><td><strong>ScalableMap</strong></td><td>2023</td><td>CoRL</td><td>60.9</td><td>57.3</td><td>63.8</td><td>60.6</td><td>可扩展长距离矢量化</td><td><a href="https://github.com/jingy1yu/ScalableMap">Code</a></td></tr>
+<tr><td>18</td><td><strong>StreamMapNet</strong></td><td>2024</td><td>WACV</td><td>62.2</td><td>54.5</td><td>60.8</td><td>~59.2</td><td>流式时序融合</td><td><a href="https://github.com/yuantianyuan01/StreamMapNet">Code</a></td></tr>
+<tr><td>19</td><td>MapNeXt</td><td>2024</td><td>arXiv</td><td>58.8</td><td>50.3</td><td>58.7</td><td>56.0</td><td>训练和扩展实践重审</td><td>—</td></tr>
+<tr><td>20</td><td>SQD-MapNet</td><td>2024</td><td>arXiv</td><td>62.5</td><td>63.0</td><td>63.3</td><td>63.9</td><td>流查询去噪</td><td>—</td></tr>
+<tr><td>21</td><td>EAN-MapNet</td><td>2024</td><td>arXiv</td><td>61.7</td><td>55.9</td><td>61.5</td><td>59.7</td><td>锚点邻域高效构建</td><td>—</td></tr>
+<tr><td>22</td><td>SatforHDMap</td><td>2024</td><td>ICRA</td><td>—</td><td>—</td><td>—</td><td>—</td><td>卫星地图辅助</td><td><a href="https://github.com/xjtu-cs-gao/SatforHDMap">Code</a></td></tr>
+<tr><td>23</td><td><strong>HIMap</strong></td><td>2024</td><td>CVPR</td><td>68.4</td><td>62.6</td><td>69.1</td><td>66.7</td><td>混合表示学习</td><td>—</td></tr>
+<tr><td>24</td><td><strong>MGMap</strong></td><td>2024</td><td>CVPR</td><td>62.4</td><td>59.8</td><td>62.4</td><td>61.5</td><td>掩码引导在线构建</td><td><a href="https://github.com/xiaolul2/MGMap">Code</a></td></tr>
+<tr><td>25</td><td>HybriMap</td><td>2024</td><td>arXiv</td><td>65.9</td><td>63.0</td><td>67.2</td><td>65.4</td><td>混合线索利用</td><td>—</td></tr>
+<tr><td>26</td><td>Shi et al.</td><td>2024</td><td>ICASSP</td><td>—</td><td>—</td><td>—</td><td>—</td><td>缓冲高斯建模</td><td>—</td></tr>
+<tr><td>27</td><td>GNMap</td><td>2024</td><td>SpatialDI</td><td>—</td><td>—</td><td>—</td><td>—</td><td>多车协作</td><td>—</td></tr>
+<tr><td>28</td><td>DiffMap</td><td>2024</td><td>arXiv</td><td>—</td><td>—</td><td>—</td><td>—</td><td>扩散模型地图先验</td><td>—</td></tr>
+<tr><td>29</td><td><strong>GeMap</strong></td><td>2024</td><td>ECCV</td><td>69.8</td><td>67.1</td><td>71.4</td><td>69.4</td><td>几何约束，结构精度高</td><td><a href="https://github.com/cnzzx/GeMap">Code</a></td></tr>
+<tr><td>30</td><td><strong>MapQR</strong></td><td>2024</td><td>ECCV</td><td>68.0</td><td>63.4</td><td>67.7</td><td>66.4</td><td>点集查询增强</td><td><a href="https://github.com/HXMap/MapQR">Code</a></td></tr>
+<tr><td>31</td><td><strong>MapTracker</strong></td><td>2024</td><td>ECCV</td><td class="r">72.4</td><td class="r">77.3</td><td class="r">74.2</td><td class="r">74.7</td><td>记忆融合跨帧跟踪</td><td><a href="https://github.com/woodfrog/maptracker">Code</a></td></tr>
+<tr><td>32</td><td><strong>ADMap</strong></td><td>2024</td><td>ECCV</td><td>56.2</td><td>49.4</td><td>57.9</td><td>54.5</td><td>抗干扰HD地图重建</td><td><a href="https://github.com/hht1996ok/ADMap">Code</a></td></tr>
+<tr><td>33</td><td><strong>Mask2Map</strong></td><td>2024</td><td>ECCV</td><td>71.3</td><td>70.6</td><td>72.9</td><td>71.6</td><td>BEV分割→矢量地图</td><td><a href="https://github.com/SehwanChoi0307/Mask2Map">Code</a></td></tr>
+<tr><td>34</td><td><strong>DTCLMapper</strong></td><td>2024</td><td>TITS</td><td>62.6</td><td>59.7</td><td>63.4</td><td>61.9</td><td>双时序一致性学习</td><td><a href="https://arxiv.org/abs/2405.05518">Code</a></td></tr>
+<tr><td>35</td><td><strong>MapTRv2</strong></td><td>2024</td><td>IJCV</td><td>62.0</td><td>55.8</td><td>61.7</td><td>59.8</td><td>MapTR改进版，统一排列建模增强</td><td><a href="https://github.com/hustvl/MapTR">Code</a></td></tr>
+<tr><td>36</td><td><strong>P-MapNet</strong></td><td>2024</td><td>RAL</td><td>—</td><td>—</td><td>—</td><td>—</td><td>SDMap+HDMap双先验</td><td><a href="https://github.com/jike5/P-MapNet">Code</a></td></tr>
+</table></div>
+
+<blockquote><p>精度数据来自 nuScenes 数据集（Camera-only，R50骨干，24ep除特殊标注外）。MV-Map 为离线方法（mIoU评测）；NMP 以mIoU为主要指标；SuperFusion/DiffMap 使用不同评测协议（CD≤1.0m+IoU≥0.1）；GNMap 在自有数据集评测；MachMap/MapSeg 在 Argoverse2 评测。以上方法不报告标准 nuScenes Chamfer AP。</p></blockquote>
+
+<p><strong>SOTA分析</strong>：</p>
+<ul>
+<li>nuScenes 最佳 mAP：MapTracker <strong>74.7%</strong>（时序）、Mask2Map <strong>71.6%</strong>、GeMap <strong>69.4%</strong>、HIMap <strong>66.7%</strong>、MapQR <strong>66.4%</strong>、HybriMap <strong>65.4%</strong>、SQD-MapNet <strong>63.9%</strong></li>
+<li><strong>SOTA级别</strong>：MapTracker (ECCV 2024) 时序跟踪当前最佳 74.7%；Mask2Map (ECCV 2024) 单帧最佳 71.6%；GeMap (ECCV 2024) 几何约束结构精度高 69.4%</li>
+<li><strong>创新表示</strong>：VectorMapNet (ICML 2023) 矢量化先驱；PivotNet (ICCV 2023) Pivot点；BeMapNet (CVPR 2023) 贝塞尔曲线</li>
+<li><strong>时序/流式</strong>：MapTracker (ECCV 2024) 74.7%；StreamMapNet (WACV 2024) 流式构建；DTCLMapper (TITS 2024) 双时序一致性 61.9%；SQD-MapNet (arXiv 2024) 流查询去噪 63.9%</li>
+<li><strong>先验增强</strong>：P-MapNet (RAL 2024) SDMap+HDMap双先验；NMP (CVPR 2023) 神经地图先验</li>
+</ul>
+
+<p><strong>小结</strong>：在线地图构建是增长最快的方向，从 HDMapNet（26.5%）到 MapTracker（74.7%），方法数量最多（36篇）。2024年 ECCV 集中涌现大量工作（ADMap、GeMap、MapQR、MapTracker、Mask2Map 等）。</p>
+
+<hr>
+
+<!-- ===== 七 ===== -->
+<h2>七、车道拓扑推理方法（Lane Topology Reasoning）—— 11篇</h2>
+<p><strong>特点</strong>：不仅检测车道线，还推理车道之间的拓扑连接关系，构建车道图结构</p>
+
+<div class="tw"><table>
+<tr><th>#</th><th>方法</th><th>年份</th><th>会议/期刊</th><th>DET_l(%)</th><th>DET_t(%)</th><th>TOP_ll(%)</th><th>TOP_lt(%)</th><th>OLS(%)</th><th>特点</th><th>代码</th></tr>
+<tr><td>1</td><td><strong>STSU</strong></td><td>2021</td><td>ICCV</td><td>12.7</td><td>43.0</td><td>2.9</td><td>19.8</td><td>25.4</td><td>首个BEV结构化理解</td><td><a href="https://github.com/ybarancan/STSU">Code</a></td></tr>
+<tr><td>2</td><td><strong>TopoRoad</strong></td><td>2022</td><td>CVPR</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>拓扑保持道路网络估计</td><td><a href="https://arxiv.org/abs/2112.10155">Code</a></td></tr>
+<tr><td>3</td><td>CenterLineDet</td><td>2023</td><td>ICRA</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>中心线图检测Transformer</td><td><a href="https://github.com/TonyXuQAQ/CenterLineDet">Code</a></td></tr>
+<tr><td>4</td><td><strong>TopoNet</strong></td><td>2023</td><td>arXiv</td><td>28.6</td><td>48.6</td><td>4.1</td><td>20.3</td><td>35.6</td><td>图神经网络拓扑推理</td><td><a href="https://github.com/OpenDriveLab/TopoNet">Code</a></td></tr>
+<tr><td>5</td><td>Can et al.</td><td>2023</td><td>ICCV</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>目标-车道聚类改进</td><td>—</td></tr>
+<tr><td>6</td><td><strong>TopoMLP</strong></td><td>2024</td><td>ICLR</td><td>28.3</td><td>51.1</td><td>7.2</td><td>22.8</td><td>38.2</td><td>简单强大MLP拓扑建模</td><td><a href="https://github.com/wudongming97/TopoMLP">Code</a></td></tr>
+<tr><td>7</td><td><strong>LaneSegNet</strong></td><td>2024</td><td>ICLR</td><td>33.4</td><td class="r">52.1</td><td>11.5</td><td>23.5</td><td>41.3</td><td>车道段感知拓扑领先</td><td><a href="https://github.com/OpenDriveLab/LaneSegNet">Code</a></td></tr>
+<tr><td>8</td><td>SMERF</td><td>2024</td><td>ICRA</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>SD导航地图增强拓扑</td><td><a href="https://github.com/NVlabs/SMERF">Code</a></td></tr>
+<tr><td>9</td><td><strong>LaneGAP</strong></td><td>2024</td><td>ECCV</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>连续性保持路径建模</td><td><a href="https://github.com/hustvl/LaneGAP">Code</a></td></tr>
+<tr><td>10</td><td><strong>TopoLogic</strong></td><td>2024</td><td>NeurIPS</td><td class="r">35.2</td><td>51.8</td><td>13.2</td><td>24.1</td><td>~42.5</td><td>可解释逻辑推理</td><td><a href="https://github.com/Franpin/TopoLogic">Code</a></td></tr>
+<tr><td>11</td><td><strong>Topo2D</strong></td><td>2024</td><td>arXiv</td><td>29.1</td><td>50.6</td><td class="r">22.3</td><td class="r">26.2</td><td class="r">44.5</td><td>2D先验初始化3D查询+拓扑推理（OpenLane F1 62.6%）</td><td><a href="https://github.com/homothetic/Topo2D">Code</a></td></tr>
+</table></div>
+
+<blockquote>
+<p><strong>Topo2D</strong> 利用 2D 车道先验增强 3D 车道检测和拓扑推理。核心发现：2D 图像空间车道检测召回率（78%）远高于 3D 空间（66%），因此用 2D 先验初始化 3D 查询比随机初始化更有效。2D Lane Decoder 每个相机视图独立执行 2D 车道检测（分层查询 + 多尺度可变形注意力）；将 2D 解码器输出直接作为 3D 查询的外观特征，并沿相机射线离散化生成 3D 位置编码。拓扑推理将 2D 和 3D 车道查询特征融合后成对拼接经 MLP 预测。OpenLane F1 <strong>62.6%</strong>（vs LATR 61.9%，Cate-Acc 94.0% vs 92.0%），OpenLane-V2 OLS <strong>44.5%</strong>（vs TopoNet 39.8%，TOP_ll +11.4%, TOP_lt +2.4%）。DET_l,chamfer 32.4%（vs MapTR 21.7%，+10.7%）。</p>
+</blockquote>
+
+<blockquote><p>精度数据来自 OpenLane-V2 数据集 | DET_l: 车道中心线检测 | DET_t: 交通元素检测 | TOP_ll: 车道-车道拓扑 | TOP_lt: 车道-交通拓扑 | OLS: 综合得分</p></blockquote>
+
+<p><strong>SOTA分析</strong>：</p>
+<ul>
+<li><strong>SOTA级别</strong>：Topo2D (arXiv 2024) OLS <strong>44.5%</strong>（当前最佳）；LaneSegNet (ICLR 2024) 车道段感知拓扑领先；TopoLogic (NeurIPS 2024) 可解释性Pipeline</li>
+<li><strong>2D先验增强</strong>：Topo2D (arXiv 2024) 利用2D高召回率先验初始化3D查询，同时完成检测和拓扑推理</li>
+<li><strong>拓扑图方法</strong>：TopoNet (arXiv 2023) 图神经网络；CenterLineDet (ICRA 2023) 中心线图检测</li>
+<li><strong>先验增强</strong>：SMERF (ICRA 2024) SD导航地图增强拓扑理解</li>
+</ul>
+
+<hr>
+
+<!-- ===== 7.5 ===== -->
+<h2>八、端到端自动驾驶与预训练方法 —— 2篇</h2>
+<p><strong>特点</strong>：非直接车道线检测方法，但从全局角度提升包括车道线检测在内的多种下游任务性能</p>
+
+<div class="tw"><table>
+<tr><th>#</th><th>方法</th><th>年份</th><th>会议/期刊</th><th>类型</th><th>核心技术</th><th>关键提升</th><th>代码</th></tr>
+<tr><td>1</td><td><strong>DriveWorld</strong></td><td>2024</td><td>arXiv</td><td>世界模型4D预训练</td><td>MSSM记忆状态空间模型 + Task Prompt</td><td>3D检测mAP +7.5%、建图IoU +3.0%、跟踪AMOTA +5.0%、规划L2 -0.34m</td><td>—</td></tr>
+<tr><td>2</td><td><strong>ExpertAD</strong></td><td>2026</td><td>AAAI</td><td>MoE端到端ADS</td><td>PA感知适配器 + MoSE稀疏专家混合（8专家3组）</td><td>碰撞率 -20%、延迟 -25%、L2误差 -14%</td><td><a href="https://github.com/Yizhxy/ExpertAD">Code</a></td></tr>
+</table></div>
+
+<blockquote>
+<p><strong>DriveWorld</strong> 基于世界模型的 4D（空间+时间）预训练框架。核心是 Memory State-Space Model（MSSM）：Dynamic Memory Bank 利用运动感知层归一化学习时序动态 + Static Scene Propagation 构建空间静态表示。Task Prompt 使用预训练文本编码器（BERT/CLIP）生成任务感知特征解耦。预训练目标为 3D occupancy 重建 + 动作预测。OpenScene 预训练 → nuScenes 微调：3D检测 mAP +7.5%、在线建图 IoU +3.0%、多目标跟踪 AMOTA +5.0%。首个基于世界模型的视觉自动驾驶 4D 预训练方法。</p>
+</blockquote>
+
+<blockquote>
+<p><strong>ExpertAD</strong> 将混合专家（MoE）引入端到端自动驾驶。Perception Adapter (PA)：Learned Adapter 逐任务计算软通道选择权重 + Alignment Layer 通过 MLP 放大任务关键特征。Mixture of Sparse Experts (MoSE)：8个专家分3组 — Environmental Experts（块级稀疏注意力处理交通信号/车道标记）、Ego State Experts（滑动窗口注意力处理自车动态）、Navigation Experts（全局TopK注意力执行路线规划）。Router 基于噪声门控动态选择 Top-k 专家。集成到 UniAD/VAD/VADv2 三个基线：碰撞率降低21-23%，延迟降低1.2-1.4×。闭环 Bench2Drive：DS/SR/RC 分别提升 16%/22%/14%。跨城市泛化（Boston↔Singapore）碰撞率降低 13-17%。</p>
+</blockquote>
+
+<hr>
+
+<!-- ===== 九 ===== -->
+<h2>九、未来方向（Future Direction）—— 6篇</h2>
+
+<div class="tw"><table>
+<tr><th>#</th><th>方向</th><th>方法</th><th>年份</th><th>会议/期刊</th><th>描述</th></tr>
+<tr><td>1</td><td>统一建模</td><td><strong>Lane2Seq</strong></td><td>2024</td><td>CVPR</td><td>序列生成统一2D车道检测，统一多格式车道表示</td></tr>
+<tr><td>2</td><td>弱监督</td><td><strong>WS-3D-Lane</strong></td><td>2023</td><td>ICRA</td><td>仅用2D标签的弱监督3D车道检测</td></tr>
+<tr><td>3</td><td>无监督/自监督</td><td><strong>MLDA</strong></td><td>2022</td><td>CVPRW</td><td>多级域适应无监督2D车道检测</td></tr>
+<tr><td>4</td><td>无监督/自监督</td><td><strong>CLLD</strong></td><td>2023</td><td>PRL</td><td>跨相似度对比学习，阴影场景+3~4% F1</td></tr>
+<tr><td>5</td><td>无监督/自监督</td><td><strong>Li et al.</strong></td><td>2023</td><td>TITS</td><td>掩码序列自编码器自预训练</td></tr>
+<tr><td>6</td><td>无监督/自监督</td><td><strong>LaneCorrect</strong></td><td>2024</td><td>arXiv</td><td>自监督车道检测</td></tr>
+</table></div>
+
+<blockquote><p>M²-3DLaneNet 和 DV-3DLane 已移至"三、3D多模态方法"章节</p></blockquote>
+
+<hr>
+
+<!-- ===== 十 ===== -->
+<h2>十、总体对比总结</h2>
+
+<div class="tw"><table>
+<tr><th>类别</th><th>方法数量</th><th>代表方法</th><th>主要数据集</th><th>最佳性能</th><th>成熟度</th></tr>
+<tr><td><strong>2D分割</strong></td><td>26篇</td><td>CondLSTR, CANet, GANet, CondLaneNet</td><td>CULane, TuSimple</td><td>F1 80.36% / Acc 97.77%</td><td>高</td></tr>
+<tr><td><strong>2D检测</strong></td><td>23篇</td><td>HGLNet, GSENet, CLRerNet, CLRNetV2</td><td>CULane, TuSimple</td><td>F1 81.83% / Acc 97.99%</td><td>高</td></tr>
+<tr><td><strong>3D BEV</strong></td><td>15篇</td><td>GLane3D, SC-Lane, HeightLane</td><td>OpenLane</td><td>F1 <span class="r">66.0%</span></td><td>中</td></tr>
+<tr><td><strong>3D BEV-Free</strong></td><td>10篇</td><td>Depth3DLane, PVALane, GTA-Net</td><td>OpenLane</td><td>F1 64.3%</td><td>中</td></tr>
+<tr><td><strong>3D 插件</strong></td><td>1篇</td><td>EP-head + PL-attention</td><td>OpenLane</td><td>+2.8~4.4 F1</td><td>新兴</td></tr>
+<tr><td><strong>3D 多模态</strong></td><td>2篇</td><td>DV-3DLane, M²-3DLaneNet</td><td>OpenLane</td><td>F1 <span class="r">66.8%</span></td><td>中</td></tr>
+<tr><td><strong>多任务</strong></td><td>13篇</td><td>AurigaNet, RMT-PPAD, YOLOPv2</td><td>BDD100K</td><td>Lane IoU 60.8% / Acc 87.3%</td><td>中高</td></tr>
+<tr><td><strong>视频</strong></td><td>11篇</td><td>OMR, LaneTCA, RVLD</td><td>VIL-100, OpenLane-V</td><td>VIL F1<sup>0.5</sup> 0.936</td><td>中</td></tr>
+<tr><td><strong>在线地图</strong></td><td>36篇</td><td>MapTracker, Mask2Map, GeMap, HIMap</td><td>nuScenes</td><td>mAP <span class="r">74.7%</span></td><td>中高</td></tr>
+<tr><td><strong>车道拓扑</strong></td><td>11篇</td><td>Topo2D, TopoLogic, LaneSegNet</td><td>OpenLane-V2</td><td>OLS 44.5%</td><td>低</td></tr>
+<tr><td><strong>端到端ADS/预训练</strong></td><td>2篇</td><td>ExpertAD, DriveWorld</td><td>nuScenes, Bench2Drive</td><td>碰撞率-20%, mAP+7.5%</td><td>新兴</td></tr>
+<tr><td><strong>未来方向</strong></td><td>6篇</td><td>Lane2Seq, CLLD, WS-3D-Lane</td><td>—</td><td>—</td><td>探索中</td></tr>
+</table></div>
+
+<p style="text-align:center;font-size:1.15em;font-weight:700;margin:22px 0"><strong>总计：157篇论文</strong></p>
+
+<hr>
+
+<!-- ===== 十一 ===== -->
+<h2>十一、发展趋势</h2>
+<ol>
+<li><strong>2D → 3D → 拓扑</strong>：从像素级向3D空间建模和语义拓扑推理演进</li>
+<li><strong>单帧 → 时序</strong>：视频方法利用帧间一致性提升 1-3% F1；3D领域 GTA-Net 引入时序几何增强</li>
+<li><strong>Top-down → Bottom-up</strong>：GLane3D（BEV-based）关键点图新范式，跨数据集泛化保留率 89%（传统 Top-down 仅 55%），纯单目 F1 达 66.0%</li>
+<li><strong>单模态 → 多模态</strong>：Camera+LiDAR 联合（DV-3DLane 66.8%），但纯单目（GLane3D 66.0%）已逼近多模态，差距仅 0.8%</li>
+<li><strong>感知 → 建图</strong>：在线 HD 地图构建是论文数量最多的方向（36篇），2024年爆发式增长，mAP从HDMapNet 26.5%→MapTracker 74.7%</li>
+<li><strong>统一化</strong>：Lane2Seq 用序列生成统一多种车道表示</li>
+<li><strong>自/弱监督</strong>：减少标注依赖（WS-3D-Lane、CLLD、LaneCorrect）是重要探索方向</li>
+<li><strong>即插即用增强</strong>：EP-head + PL-attention 不改架构即可提升 +2.8~4.4 F1，发现并修复现有 sparse 表示的端点截断缺陷</li>
+<li><strong>斜率自适应高度估计</strong>：SC-Lane (arXiv 2025) 动态融合多斜率特征 + 时序一致性，F1 64.3%，超越固定斜率方法</li>
+<li><strong>自监督深度赋能3D检测</strong>：Depth3DLane (arXiv 2025) 双路径融合自监督深度，无需相机标定，适用于众包场景</li>
+<li><strong>2D先验增强拓扑</strong>：Topo2D (arXiv 2024) 利用2D高召回率先验初始化3D查询，OLS 44.5% 拓扑推理最佳</li>
+<li><strong>MoE赋能端到端ADS</strong>：ExpertAD (AAAI 2026) PA感知适配器 + MoSE稀疏专家，碰撞率-20%、延迟-25%</li>
+<li><strong>端到端实例分割</strong>：AurigaNet (arXiv 2026) 判别损失+可变形卷积，车道IoU 60.8%（超第二名>30%），217 FPS</li>
+</ol>
+
+<hr>
+
+<h2>附录：通用代码框架推荐</h2>
+<p>开发车道检测算法可用的代码框架：</p>
+<ol>
+<li><strong><a href="https://github.com/Turoad/lanedet">LaneDet</a></strong> — 通用车道检测框架</li>
+<li><strong><a href="https://github.com/zkyseu/PPlanedet">PPLaneDet</a></strong> — PPLaneDet框架</li>
+<li><strong><a href="https://github.com/Yzichen/mmLaneDet">MMLaneDet</a></strong> — 基于MMDetection的车道检测</li>
+<li><strong><a href="https://github.com/zkyntu/UnLanedet">UnLaneDet</a></strong> — 统一车道检测框架</li>
+</ol>
+
+<hr>
+
+<p class="ft">注：本整理基于2025年4月之前的文献，原始仓库会持续更新。精度对比基于各论文报告及社区评估，具体数值请参考原始论文。</p>
+
+</body>
+</html>
